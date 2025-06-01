@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Difference Inversion: Interpolate and Isolate the Difference with Token Consistency for Image Analogy Generation</title>
@@ -176,10 +182,23 @@
       <div class="columns is-centered">
         <!-- Example result image; replace with actual asset -->
         <div class="column is-two-quarters">
-          <figure class="image" style="max-width: 70%; margin-left: auto; margin-right: auto;"></figure>
+          <div class="image-wrapper" style="max-width: 90%; margin-left: auto; margin-right: auto;">
             <img src="assets/fig_main.png" alt="Result 1" />
-          </figure>
+          </div>
         </div>
+      </div>
+      <div class="content" style="margin-top: 2rem;">
+        <ul>
+          <li>
+            <strong>Delta Interpolation:</strong> Rather than relying solely on image‐space differences, we extract both an Image Delta (CLIP‐image embedding difference) and a Text Delta (CLIP‐text embedding difference from BLIP2 captions), then apply spherical linear interpolation (α=0.8) in CLIP’s joint hypersphere. This yields a more precise Delta that captures both visual and semantic changes between A and A′. 
+          </li>
+          <li>
+            <strong>Token Consistency Loss:</strong> To ensure the Difference Tokens encode only the intended modifications, we enforce bidirectional consistency: when \( \widetilde{D} \) is concatenated with prompt A, the model reconstructs A′; when \( \widetilde{D} \) is negated or removed with prompt A′, it reconstructs A. We implement this via a two‐term MSE loss on predicted noise (before/after) so that \( \widetilde{D} \) activates only the exact difference-information. 
+          </li>
+          <li>
+            <strong>Zero-Initialization of Token Embeddings:</strong> All Difference Tokens are initialized to zero, preventing any unintended artifacts. Starting from zero ensures that optimization focuses exclusively on learning the precise difference, stabilizing training and minimizing spurious artifacts. 
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -191,9 +210,12 @@
       <div class="columns is-centered">
         <!-- Example main result image; replace with actual asset -->
         <div class="column is-two-quarters">
-          <figure class="image" style="max-width: 80%; margin-left: auto; margin-right: auto;">
+          <figure class="image" style="max-width: 95%; margin-left: auto; margin-right: auto;">
             <img src="assets/fig_teaser_fig.png" alt="Qualitative Result" />
           </figure>
+          <p>
+            In our experiments, Difference Inversion generates visually more natural and accurate B′ images compared to existing baselines under the A:A′::B:B′ analogy. Specifically, it applies the transformation from A to A′ onto B while preserving B’s original structure and details. Across various examples—such as human faces, object backgrounds, and lighting changes—our method consistently produces clean, high-quality outputs, demonstrating significant visual improvements.
+          </p>
         </div>
       </div>
     </div>
@@ -203,16 +225,33 @@
   <section class="section" id="quantitative">
     <div class="container">
       <h2 class="title is-3 has-text-centered">Quantitative Results</h2>
-      <div class="columns">
-        <!-- quantitative_final.png centered and constrained -->
-        <div class="column has-text-centered">
-          <figure class="image" style="max-width: 80%; margin-left: auto; margin-right: auto;">
+
+      <!-- Image on top -->
+      <div class="columns is-centered">
+        <div class="column is-full has-text-centered">
+          <figure class="image" style="max-width: 90%; margin: 0 auto;">
             <img src="assets/quantitative_final.png" alt="Quantitative 1" />
           </figure>
         </div>
       </div>
+
+      <!-- Text below -->
+      <div class="content" style="margin-top: 2rem;">
+        <ul>
+          <li>
+            <strong>Top:</strong> CLIP and DINO directional similarity &mdash; measures how well the generated B′ aligns with the A:A′ transformation in embedding space, indicating semantic and visual fidelity.
+          </li>
+          <li>
+            <strong>Bottom-left:</strong> Human evaluation &mdash; collects perceptual ratings from human annotators to assess the realism and adherence of B′ to the intended analogy, providing a subjective quality check.
+          </li>
+          <li>
+            <strong>Bottom-right:</strong> Large-scale VLM evaluation &mdash; uses large vision–language models to automatically score how plausibly B′ satisfies the A:A′::B:B′ relationship, enabling scalable, objective assessment.
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
+
 
   <!-- BibTeX Section -->
   <section class="section" id="bibtex">
