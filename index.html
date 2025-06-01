@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Difference Inversion: Image Analogy Generation</title>
+  <title>Difference Inversion: Interpolate and Isolate the Difference with Token Consistency for Image Analogy Generation</title>
 
   <!-- Bulma CSS (for quick styling) -->
   <link
@@ -83,19 +83,20 @@
     <div id="navbarBasic" class="navbar-menu">
       <div class="navbar-start">
         <a class="navbar-item" href="#abstract">Abstract</a>
-        <a class="navbar-item" href="#results">Results</a>
-        <a class="navbar-item" href="#video">Video</a>
+        <a class="navbar-item" href="#results">Difference Inversion</a>
+        <a class="navbar-item" href="#quantitative">Quantitative Results</a>
+        <a class="navbar-item" href="#ablation">Qualitative Results</a>
         <a class="navbar-item" href="#bibtex">BibTeX</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section with Title and Authors -->
+  <!-- Hero Section with Title, Conference, and Authors -->
   <section class="hero">
     <div class="hero-body">
       <div class="container has-text-centered">
         <h1 class="title is-2">
-          Difference Inversion: Interpolate and Isolate the Difference with Token Consistency for Image Analogy Generation
+          Difference Inversion: Interpolate and Isolate the Difference with Token Consistency
         </h1>
         <div class="subtitle is-5 authors">
           <a href="https://gustn9609.github.io/">Hyunsoo Kim</a><sup>1,2</sup>,
@@ -105,6 +106,11 @@
           <sup>2</sup>Korea Institute of Science and Technology &nbsp; 
           <sup>3</sup>Kyung Hee University
         </div>
+
+        <!-- CVPR 2025, smaller and eye-catching color -->
+        <h4 class="subtitle is-3" style="color: #020202; margin-bottom: 1rem;">
+          CVPR 2025
+        </h4>
 
         <div class="buttons is-centered">
           <a
@@ -132,21 +138,22 @@
     </div>
   </section>
 
+
+
   <!-- Teaser Image (or first figure from paper) -->
   <section class="section" id="results">
     <div class="container">
-      <h2 class="title is-3 has-text-centered">Teaser / Example Output</h2>
+      <!-- <h2 class="title is-3 has-text-centered">Teaser / Example Output</h2> -->
       <div class="columns is-centered">
         <div class="column is-three-quarters">
           <!-- Example figure extracted from page 1 of PDF -->
           <img
-            src="assets/fig_teaser_fig.png"
+            src="assets/fig_teaser_final.png"
             alt="Teaser: Comparison A → A′ → B → B′ across methods"
           />
           <p class="has-text-centered is-size-7" style="margin-top: 0.5rem;">
             <em>
-              Figure: Given {A, A′, B} triplet, our Difference Inversion produces plausible B′ that
-              best captures A → A′ transformation while preserving information from B.
+              Figure: The goal of image analogy generation is to generate plausible B' based on the image triplet {A, A', B}, ensuring that it satisfies the image analogy generation formulation A:A'=B:B'.
             </em>
           </p>
         </div>
@@ -160,47 +167,53 @@
       <h2 class="title is-3 has-text-centered">Abstract</h2>
       <div class="content">
         <p>
-          We present Difference Inversion, the first model-agnostic inversion method that isolates
-          and applies only the precise difference between an image pair {A, A′} onto a new query
-          image B, without introducing unwanted artifacts. By interpolating between image and text
-          deltas using token consistency, our method faithfully captures the transformation A → A′
-          and transfers it onto B to generate a plausible B′. Unlike previous baselines, Difference
-          Inversion can generalize across different diffusion backbones (e.g., SDXL), enabling new
-          applications in image editing and many other analogy-based computer vision tasks.
+          How can we generate an image B' that satisfies A:A'::B:B', given the input images A,A' and B?
+          Recent works have tackled this challenge through approaches like visual in-context learning or visual instruction. However, these methods are typically limited to specific models (e.g. InstructPix2Pix. Inpainting models) rather than general diffusion models (e.g. Stable Diffusion, SDXL). This dependency may lead to inherited biases or lower editing capabilities. In this paper, we propose Difference Inversion, a method that isolates only the difference from A and A' and applies it to B to generate a plausible B'. To address model dependency, it is crucial to structure prompts in the form of a "Full Prompt" suitable for input to stable diffusion models, rather than using an "Instruction Prompt". To this end, we accurately extract the Difference between A and A' and combine it with the prompt of B, enabling a plug-and-play application of the difference. To extract a precise difference, we first identify it through 1) Delta Interpolation. Additionally, to ensure accurate training, we propose the 2) Token Consistency Loss and 3) Zero Initialization of Token Embeddings. Our extensive experiments demonstrate that Difference Inversion outperforms existing baselines both quantitatively and qualitatively, indicating its ability to generate more feasible B' in a model-agnostic manner.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- Results Gallery Section -->
+  <!-- Method -->
   <section class="section" id="results-gallery">
     <div class="container">
-      <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
-      <div class="columns is-multiline">
+      <h2 class="title is-3 has-text-centered">Difference Inversion</h2>
+      <div class="columns is-centered">
         <!-- Example result images; replace with actual assets -->
-        <div class="column is-half">
-          <figure class="image is-4by3">
-            <img src="assets/result1.png" alt="Result 1" />
-          </figure>
-        </div>
-        <div class="column is-half">
-          <figure class="image is-4by3">
-            <img src="assets/result2.png" alt="Result 2" />
-          </figure>
-        </div>
-        <div class="column is-half">
-          <figure class="image is-4by3">
-            <img src="assets/result3.png" alt="Result 3" />
-          </figure>
-        </div>
-        <div class="column is-half">
-          <figure class="image is-4by3">
-            <img src="assets/result4.png" alt="Result 4" />
-          </figure>
+        <div class="column is-two-quarters">
+          <img src="assets/fig_main.png" alt="Result 1" />
         </div>
       </div>
     </div>
   </section>
+
+  <section class="section" id="results-gallery">
+    <div class="container">
+      <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+      <div class="columns is-centered">
+        <!-- Example main result image -->
+        <div class="column is-two-quarters">
+          <img src="assets/fig_teaser_fig.png" alt="Result 1" />
+        </div>
+      </div>
+
+      <section class="section" id="quantitative">
+        <div class="container">
+          <h2 class="title is-3 has-text-centered">Quantitative Results</h2>
+          <div class="columns">
+            <!-- quantitative_1.png takes ~60% of the width -->
+            <div class="column is-centered">
+              <figure class="image">
+                <img src="assets/quantitative_final.png" alt="Quantitative 1" />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </div>
+  </section>
+
 
   <!-- BibTeX Section -->
   <section class="section" id="bibtex">
